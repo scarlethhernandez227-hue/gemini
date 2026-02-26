@@ -54,9 +54,9 @@
         const [currentPrice, setCurrentPrice] = useState(76);
 
         const moreOptions = [
-          { id: 'more-1', title: '经济型', provider: '阳光出行', score: '4.5分', price: 59, tags: '免费等60分钟 · 用车前2h免费取消' },
-          { id: 'more-2', title: '舒适型', provider: '神州专车', score: '4.7分', price: 82, tags: '免费等60分钟 · 用车前2h免费取消' },
-          { id: 'more-3', title: '6座商务车', provider: '首汽约车', score: '4.9分', price: 128, tags: '免费等60分钟 · 用车前2h免费取消' }
+          { id: 'more-1', title: '经济型', provider: '阳光出行', price: 59, tags: '免费等60分钟 · 用车前2h免费取消' },
+          { id: 'more-2', title: '舒适型', provider: '神州专车', price: 82, tags: '免费等60分钟 · 用车前2h免费取消' },
+          { id: 'more-3', title: '6座商务车', provider: '首汽约车', price: 128, tags: '免费等60分钟 · 用车前2h免费取消' }
         ];
         
         const [activeMoreId, setActiveMoreId] = useState('more-1');
@@ -301,7 +301,7 @@
                         </div>
                       </div>
                       <div className="flex items-center text-sm text-gray-700 mt-1">
-                        <span className="font-medium">携程专车 4.9分</span>
+                        <span className="font-medium">携程专车</span>
                         <ChevronRightIcon />
                       </div>
                       <div className="flex items-center text-xs text-gray-500 mt-1">
@@ -351,7 +351,7 @@
                         </div>
                       </div>
                       <div className="flex items-center text-sm text-gray-700 mt-1">
-                        <span className="font-medium">携程豪华车 4.7分</span>
+                        <span className="font-medium">携程豪华车</span>
                         <ChevronRightIcon />
                       </div>
                       <div className="flex items-center text-xs text-gray-500 mt-1">
@@ -396,7 +396,7 @@
                         </div>
                       </div>
                       <div className="flex items-center text-sm text-gray-700 mt-1">
-                        <span className="font-medium">小马智行 4.9分</span>
+                        <span className="font-medium">小马智行</span>
                         <ChevronRightIcon />
                       </div>
                       <div className="flex items-center text-xs text-gray-500 mt-1">
@@ -467,5 +467,6 @@
     </script>
 </body>
 </html>
+
 
 
