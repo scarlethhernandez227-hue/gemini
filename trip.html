@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HKD Ride Hailing App</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 24px); }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 antialiased">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, useRef } = React;
+
+      // --- SVG Icons ---
+      const IconBase = ({ children, className = "w-4 h-4", ...props }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+          {children}
+        </svg>
+      );
+      const ChevronLeft = ({className}) => <IconBase className={className}><polyline points="15 18 9 12 15 6" /></IconBase>;
+      const Edit2 = ({className}) => <IconBase className={className}><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></IconBase>;
+      const User = ({className}) => <IconBase className={className}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></IconBase>;
+      const Briefcase = ({className}) => <IconBase className={className}><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></IconBase>;
+      const Info = ({className}) => <IconBase className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></IconBase>;
+      const Clock = ({className}) => <IconBase className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
+      const CheckCircle2 = ({className}) => <IconBase className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></IconBase>;
+      const Zap = ({className}) => <IconBase className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></IconBase>;
+      const CheckCircleFilled = ({className}) => (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+          <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 11.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+        </svg>
+      );
+      
+      // AI Chat Icons
+      const Sparkles = ({className}) => <IconBase className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></IconBase>;
+      const Send = ({className}) => <IconBase className={className}><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></IconBase>;
+      const X = ({className, ...props}) => <IconBase className={className} {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></IconBase>;
+      const ArrowRight = ({className}) => <IconBase className={className}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></IconBase>;
+
+      // Currency Switch Icon
+      const CurrencySwitch = ({className}) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+          <path d="M8 7h8M8 11h8M10 15h4M4 12a8 8 0 1116 0 8 8 0 01-16 0z" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M18 4l2 2-2 2M6 20l-2-2 2-2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+
+      // Promo Box Icon
+      const PromoGift = () => (
+        <svg viewBox="0 0 40 40" className="w-10 h-10">
+          <circle cx="20" cy="20" r="20" fill="#EBF2FF" />
+          <path d="M12 24 L28 24 L26 32 L14 32 Z" fill="#4B83F3" />
+          <path d="M10 18 L30 18 L28 24 L12 24 Z" fill="#F44B6D" />
+          <rect x="18" y="14" width="4" height="18" fill="#FFD15B" />
+          <path d="M20 16 C20 16 16 12 14 14 C12 16 20 20 20 20 Z" fill="#F44B6D" />
+          <path d="M20 16 C20 16 24 12 26 14 C28 16 20 20 20 20 Z" fill="#F44B6D" />
+          <text x="13" y="22" fontSize="6" fill="white" fontWeight="bold">%</text>
+        </svg>
+      );
+
+      // --- Pure Vector Car SVGs ---
+      const VectorCar = ({ type }) => {
+        if (type === 'sedan') {
+          return (
+            <svg viewBox="0 0 120 60" className="w-24 h-12">
+              <defs>
+                <linearGradient id="carBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="100%" stopColor="#e5e7eb" />
+                </linearGradient>
+              </defs>
+              {/* Shadow */}
+              <ellipse cx="60" cy="50" rx="45" ry="6" fill="rgba(0,0,0,0.15)" />
+              {/* Body */}
+              <path d="M20 40 C 15 40, 10 35, 12 28 C 15 20, 30 15, 45 15 C 60 15, 80 18, 95 25 C 105 30, 110 35, 108 40 C 105 45, 95 45, 90 45 L 30 45 C 25 45, 20 45, 20 40 Z" fill="url(#carBody)" stroke="#d1d5db" strokeWidth="1"/>
+              {/* Windows */}
+              <path d="M38 28 C 42 18, 55 18, 65 18 C 75 18, 85 22, 90 26 C 90 26, 80 28, 65 28 L 38 28 Z" fill="#374151" />
+              <path d="M42 26 C 45 20, 52 20, 60 20 L 60 26 L 42 26 Z" fill="#4b5563" />
+              <path d="M62 26 L 62 20 C 70 20, 80 23, 85 26 L 62 26 Z" fill="#4b5563" />
+              {/* Wheels */}
+              <circle cx="35" cy="42" r="8" fill="#1f2937" />
+              <circle cx="35" cy="42" r="4" fill="#9ca3af" />
+              <circle cx="85" cy="42" r="8" fill="#1f2937" />
+              <circle cx="85" cy="42" r="4" fill="#9ca3af" />
+              {/* Headlight */}
+              <path d="M98 32 C 102 32, 105 34, 105 36 C 100 36, 95 36, 95 34 C 95 32, 98 32, 98 32 Z" fill="#fef08a" />
+            </svg>
+          );
+        } else if (type === 'van') {
+          return (
+            <svg viewBox="0 0 120 60" className="w-24 h-12">
+              <defs>
+                <linearGradient id="vanBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="100%" stopColor="#e5e7eb" />
+                </linearGradient>
+              </defs>
+              {/* Shadow */}
+              <ellipse cx="60" cy="52" rx="48" ry="6" fill="rgba(0,0,0,0.15)" />
+              {/* Body */}
+              <path d="M15 42 C 10 42, 10 30, 10 25 C 10 15, 25 10, 40 10 C 60 10, 80 15, 95 25 C 105 32, 110 38, 108 42 C 105 46, 95 46, 90 46 L 25 46 C 20 46, 15 46, 15 42 Z" fill="url(#vanBody)" stroke="#d1d5db" strokeWidth="1"/>
+              {/* Windows */}
+              <path d="M25 25 C 25 15, 40 13, 50 13 C 65 13, 80 18, 90 25 C 90 25, 80 27, 60 27 L 25 27 Z" fill="#374151" />
+              <path d="M28 25 L 28 15 C 35 15, 45 15, 50 15 L 50 25 L 28 25 Z" fill="#4b5563" />
+              <path d="M52 25 L 52 15 C 65 15, 75 19, 85 25 L 52 25 Z" fill="#4b5563" />
+              {/* Wheels */}
+              <circle cx="30" cy="44" r="8" fill="#1f2937" />
+              <circle cx="30" cy="44" r="4" fill="#9ca3af" />
+              <circle cx="85" cy="44" r="8" fill="#1f2937" />
+              <circle cx="85" cy="44" r="4" fill="#9ca3af" />
+              {/* Headlight */}
+              <path d="M98 34 C 102 34, 105 36, 105 38 C 100 38, 95 38, 95 36 C 95 34, 98 34, 98 34 Z" fill="#fef08a" />
+            </svg>
+          );
+        }
+        return null;
+      };
+
+      // --- Main App ---
+      const HKDRideHailingApp = () => {
+        const [selectedSku, setSelectedSku] = useState('standard');
+        const [isPromoSelected, setIsPromoSelected] = useState(true);
+
+        // AI Chat State
+        const [isChatExpanded, setIsChatExpanded] = useState(false);
+        const [chatInput, setChatInput] = useState('');
+        const [chatMessages, setChatMessages] = useState([
+          { role: 'ai', content: 'Hi! I\'m your AI Assistant. Need help choosing a ride? (e.g. "I have 3 large bags")' }
+        ]);
+        const messagesEndRef = useRef(null);
+
+        useEffect(() => {
+          if (messagesEndRef.current && isChatExpanded) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, [chatMessages, isChatExpanded]);
+
+        const handleSendMessage = (text = chatInput) => {
+          if (!text.trim()) return;
+          setChatMessages(prev => [...prev, { role: 'user', content: text }]);
+          setChatInput('');
+          setIsChatExpanded(true);
+          
+          setTimeout(() => {
+            setChatMessages(prev => [...prev, { 
+              role: 'ai', 
+              content: `Based on "${text}", I highly recommend the "Medium van" for extra luggage space and a more comfortable trip.` 
+            }]);
+          }, 800);
+        };
+
+        return (
+          <div className="w-full max-w-md mx-auto bg-gray-50 min-h-screen relative font-sans shadow-2xl flex flex-col overflow-x-hidden">
+            
+            {/* Header (Sticky) */}
+            <div className="bg-white sticky top-0 z-20 px-4 pt-12 pb-3 shadow-sm border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <ChevronLeft className="w-6 h-6 text-gray-800 cursor-pointer" />
+                <div className="flex-1 flex flex-col items-center justify-center">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-base font-bold text-gray-900">Shanghai airport drop-off</span>
+                    <Edit2 className="w-3.5 h-3.5 text-gray-400" />
+                  </div>
+                  <div className="text-[11px] text-gray-500 mt-0.5">Pick-up time: 14:25, Mar 1 local time</div>
+                </div>
+                <div className="flex flex-col items-center justify-center cursor-pointer">
+                  <CurrencySwitch className="w-5 h-5 text-gray-800" />
+                  <span className="text-[10px] text-gray-800 font-bold mt-0.5">HKD</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-3 space-y-3 pb-10">
+
+              {/* Promo Banner */}
+              <div 
+                className="bg-[#FFF8FA] rounded-xl p-3 border border-pink-100 flex items-center justify-between shadow-sm cursor-pointer"
+                onClick={() => setIsPromoSelected(!isPromoSelected)}
+              >
+                <div className="flex items-center space-x-3">
+                  <PromoGift />
+                  <div>
+                    <div className="flex items-center">
+                      <span className="font-bold text-gray-900 text-base">Promo code pack</span>
+                      <Info className="w-3.5 h-3.5 text-gray-400 ml-1" />
+                    </div>
+                    <div className="text-sm font-medium text-[#E11A39] mt-0.5">Save HK$16.89 instantly</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-bold text-[#2B60E4] text-base">+HK$0</span>
+                  {isPromoSelected ? (
+                    <CheckCircleFilled className="w-6 h-6 text-[#2B60E4]" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full border-2 border-gray-300"></div>
+                  )}
+                </div>
+              </div>
+
+              {/* === AI 智能问答模块 (English Localized) === */}
+              {!isChatExpanded && (
+                <div className="bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-2xl p-3 shadow-sm cursor-pointer transition-all hover:shadow-md">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center text-sm font-bold text-[#2B60E4]">
+                      <Sparkles className="w-4 h-4 mr-1.5 text-blue-500 fill-blue-500" />
+                      AI Ride Assistant
+                    </div>
+                    <span className="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">Beta</span>
+                  </div>
+                  <div onClick={() => setIsChatExpanded(true)} className="bg-white rounded-lg p-2.5 text-xs text-gray-500 flex items-center mb-3 border border-gray-200 shadow-sm">
+                    <span className="flex-1">e.g. "I have a pet dog with me..."</span>
+                    <div className="bg-[#2B60E4] text-white rounded p-1"><ArrowRight className="w-3 h-3" /></div>
+                  </div>
+                  <div className="flex space-x-2 overflow-x-auto hide-scrollbar">
+                    <span onClick={(e) => { e.stopPropagation(); handleSendMessage("Pet friendly rides"); }} className="text-[11px] text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap active:bg-gray-50 font-medium">🐶 Pet friendly</span>
+                    <span onClick={(e) => { e.stopPropagation(); handleSendMessage("Business travel"); }} className="text-[11px] text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap active:bg-gray-50 font-medium">💼 Business</span>
+                    <span onClick={(e) => { e.stopPropagation(); handleSendMessage("Large luggage"); }} className="text-[11px] text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-full whitespace-nowrap active:bg-gray-50 font-medium">🧳 Large luggage</span>
+                  </div>
+                </div>
+              )}
+
+              {isChatExpanded && (
+                <div className="bg-white border border-blue-200 rounded-2xl shadow-lg flex flex-col overflow-hidden transition-all h-[320px]">
+                  <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-white border-b border-blue-50">
+                    <div className="flex items-center text-sm font-bold text-[#2B60E4]">
+                      <Sparkles className="w-4 h-4 mr-1.5 text-blue-500 fill-blue-500" />
+                      AI Ride Assistant
+                    </div>
+                    <X className="w-5 h-5 text-gray-400 cursor-pointer p-0.5" onClick={() => setIsChatExpanded(false)} />
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50/50">
+                    {chatMessages.map((msg, idx) => (
+                      <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        {msg.role === 'ai' && <Sparkles className="w-3 h-3 text-blue-500 mr-1 mt-1 flex-shrink-0" />}
+                        <div className={`max-w-[85%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed ${
+                          msg.role === 'user' 
+                          ? 'bg-[#2B60E4] text-white rounded-tr-sm' 
+                          : 'bg-white text-gray-800 border border-gray-100 shadow-sm rounded-tl-sm'
+                        }`}>
+                          {msg.content}
+                        </div>
+                      </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </div>
+                  <div className="p-3 bg-white border-t border-gray-100 flex items-center space-x-2">
+                    <input 
+                      type="text" 
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                      className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-[13px] focus:outline-none focus:ring-1 focus:ring-[#2B60E4] placeholder-gray-400" 
+                      placeholder="Ask anything..." 
+                    />
+                    <button 
+                      onClick={() => handleSendMessage()}
+                      className={`p-2 rounded-full flex-shrink-0 transition-colors ${chatInput.trim() ? 'bg-[#2B60E4] text-white' : 'bg-gray-200 text-gray-400'}`}
+                    >
+                      <Send className="w-4 h-4 ml-[-2px]" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* SKU 1: Standard car */}
+              <div 
+                className={`bg-white rounded-xl p-4 cursor-pointer transition-all duration-200 ${selectedSku === 'standard' ? 'border-2 border-[#2B60E4] shadow-md' : 'border border-gray-200 shadow-sm'}`}
+                onClick={() => setSelectedSku('standard')}
+              >
+                <div className="text-teal-600 font-bold text-xs mb-2 tracking-wide">Recently booked</div>
+                
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 mb-2">
+                      <span className="text-lg font-bold text-gray-900">Standard car</span>
+                      <User className="w-3.5 h-3.5 text-gray-600 ml-1" /><span className="text-xs font-bold text-gray-700">4</span>
+                      <Briefcase className="w-3.5 h-3.5 text-gray-600 ml-1" /><span className="text-xs font-bold text-gray-700">2</span>
+                      <Info className="w-3.5 h-3.5 text-gray-400 ml-1" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center text-[13px] text-gray-700">
+                        <Clock className="w-4 h-4 mr-1.5 text-gray-600" /> Free waiting for 30 minutes
+                      </div>
+                      <div className="flex items-center text-[13px] text-teal-600">
+                        <CheckCircle2 className="w-4 h-4 mr-1.5 text-teal-600" /> Free cancellation before pick-up
+                      </div>
+                      <div className="flex items-center text-[13px] text-teal-600">
+                        <Zap className="w-4 h-4 mr-1.5 text-teal-600" /> Instant confirmation
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Vector Car Image */}
+                  <div className="ml-2 -mt-4">
+                    <VectorCar type="sedan" />
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col items-end border-t border-gray-50 pt-3">
+                  <div className="flex items-end space-x-2">
+                    <span className="text-sm text-gray-400 line-through mb-0.5">HK$112.55</span>
+                    <span className="text-[#2B60E4] font-bold text-2xl leading-none tracking-tight">
+                      <span className="text-sm mr-0.5">HK$</span>95.66
+                    </span>
+                    <button className="bg-[#2B60E4] hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg ml-3">
+                      Select
+                    </button>
+                  </div>
+                  <div className="flex items-center mt-2 bg-[#FFF0F4] px-1.5 py-0.5 rounded text-[10px]">
+                    <span className="text-gray-600 mr-1">Promo code pack</span>
+                    <span className="bg-[#E11A39] text-white px-1 py-0.5 rounded-sm font-bold">15% off</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* SKU 2: Medium car */}
+              <div 
+                className={`bg-white rounded-xl p-4 cursor-pointer transition-all duration-200 ${selectedSku === 'medium' ? 'border-2 border-[#2B60E4] shadow-md' : 'border border-gray-200 shadow-sm'}`}
+                onClick={() => setSelectedSku('medium')}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 mb-2">
+                      <span className="text-lg font-bold text-gray-900">Medium car</span>
+                      <User className="w-3.5 h-3.5 text-gray-600 ml-1" /><span className="text-xs font-bold text-gray-700">4</span>
+                      <Briefcase className="w-3.5 h-3.5 text-gray-600 ml-1" /><span className="text-xs font-bold text-gray-700">2</span>
+                      <Info className="w-3.5 h-3.5 text-gray-400 ml-1" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center text-[13px] text-gray-700">
+                        <Clock className="w-4 h-4 mr-1.5 text-gray-600" /> Free waiting for 30 minutes
+                      </div>
+                      <div className="flex items-center text-[13px] text-teal-600">
+                        <CheckCircle2 className="w-4 h-4 mr-1.5 text-teal-600" /> Free cancellation before pick-up
+                      </div>
+                      <div className="flex items-center text-[13px] text-teal-600">
+                        <Zap className="w-4 h-4 mr-1.5 text-teal-600" /> Instant confirmation
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-2 mt-3">
+                      <span className="border border-gray-300 text-gray-600 text-[11px] px-1.5 py-0.5 rounded">Bottled water</span>
+                      <span className="border border-gray-300 text-gray-600 text-[11px] px-1.5 py-0.5 rounded">Driver in suit</span>
+                    </div>
+                  </div>
+                  
+                  {/* Vector Car Image */}
+                  <div className="ml-2">
+                    <VectorCar type="sedan" />
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col items-end border-t border-gray-50 pt-3">
+                  <div className="flex items-end space-x-2">
+                    <span className="text-sm text-gray-400 line-through mb-0.5">HK$148.81</span>
+                    <span className="text-[#2B60E4] font-bold text-2xl leading-none tracking-tight">
+                      <span className="text-sm mr-0.5">HK$</span>126.48
+                    </span>
+                    <button className="bg-[#2B60E4] hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg ml-3">
+                      Select
+                    </button>
+                  </div>
+                  <div className="flex items-center mt-2 bg-[#FFF0F4] px-1.5 py-0.5 rounded text-[10px]">
+                    <span className="text-gray-600 mr-1">Promo code pack</span>
+                    <span className="bg-[#E11A39] text-white px-1 py-0.5 rounded-sm font-bold">15% off</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* SKU 3: Medium van */}
+              <div 
+                className={`bg-white rounded-xl p-4 cursor-pointer transition-all duration-200 ${selectedSku === 'van' ? 'border-2 border-[#2B60E4] shadow-md' : 'border border-gray-200 shadow-sm'}`}
+                onClick={() => setSelectedSku('van')}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 mb-2">
+                      <span className="text-lg font-bold text-gray-900">Medium van</span>
+                      <User className="w-3.5 h-3.5 text-gray-600 ml-1" /><span className="text-xs font-bold text-gray-700">6</span>
+                      <Briefcase className="w-3.5 h-3.5 text-gray-600 ml-1" /><span className="text-xs font-bold text-gray-700">4</span>
+                      <Info className="w-3.5 h-3.5 text-gray-400 ml-1" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center text-[13px] text-gray-700">
+                        <Clock className="w-4 h-4 mr-1.5 text-gray-600" /> Free waiting for 30 minutes
+                      </div>
+                      <div className="flex items-center text-[13px] text-teal-600">
+                        <CheckCircle2 className="w-4 h-4 mr-1.5 text-teal-600" /> Free cancellation before pick-up
+                      </div>
+                      <div className="flex items-center text-[13px] text-teal-600">
+                        <Zap className="w-4 h-4 mr-1.5 text-teal-600" /> Instant confirmation
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-2 mt-3">
+                      <span className="border border-gray-300 text-gray-600 text-[11px] px-1.5 py-0.5 rounded">Bottled water</span>
+                      <span className="border border-gray-300 text-gray-600 text-[11px] px-1.5 py-0.5 rounded">Driver in suit</span>
+                    </div>
+                  </div>
+                  
+                  {/* Vector Car Image */}
+                  <div className="ml-2">
+                    <VectorCar type="van" />
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col items-end border-t border-gray-50 pt-3">
+                  <div className="flex items-end space-x-2">
+                    <span className="text-sm text-gray-400 line-through mb-0.5">HK$199.96</span>
+                    <span className="text-[#2B60E4] font-bold text-2xl leading-none tracking-tight">
+                      <span className="text-sm mr-0.5">HK$</span>169.96
+                    </span>
+                    <button className="bg-[#2B60E4] hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg ml-3">
+                      Select
+                    </button>
+                  </div>
+                  <div className="flex items-center mt-2 bg-[#FFF0F4] px-1.5 py-0.5 rounded text-[10px]">
+                    <span className="text-gray-600 mr-1">Promo code pack</span>
+                    <span className="bg-[#E11A39] text-white px-1 py-0.5 rounded-sm font-bold">15% off</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<HKDRideHailingApp />);
+    </script>
+</body>
+</html>
