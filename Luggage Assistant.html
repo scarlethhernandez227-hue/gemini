@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TripGenie x Dify 5-Step Logic Demo</title>
+    <title>TripGenie x Dify 5步联动逻辑演示</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes pulse-glow {
@@ -61,7 +61,7 @@
 
 <div class="w-full h-full max-w-[1440px] flex gap-4 p-4">
     
-    <!-- LEFT: App Interface (Mobile) -->
+    <!-- 左侧：App 界面 (手机模拟) -->
     <div class="w-[380px] bg-white rounded-[3rem] border-[10px] border-gray-900 shadow-2xl relative flex flex-col overflow-hidden shrink-0">
         <div class="h-10 flex justify-between px-8 pt-4 items-center">
             <span class="text-xs font-bold font-mono">9:41</span>
@@ -75,8 +75,8 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5"/></svg>
                 </div>
                 <div class="ml-2">
-                    <h2 class="text-xs font-bold">Transfer: Shanghai Hongqiao</h2>
-                    <p class="text-[9px] text-gray-400">Mar 20, 15:00 · 3 Pax · Special Items Included</p>
+                    <h2 class="text-xs font-bold">送机：上海虹桥T2航站楼</h2>
+                    <p class="text-[9px] text-gray-400">3月20日 15:00 · 3人(含1儿童) · 含特殊行李</p>
                 </div>
             </div>
 
@@ -85,30 +85,30 @@
                     <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
                     </div>
-                    <span class="font-bold text-xs text-blue-600">TripGenie Luggage Assistant</span>
+                    <span class="font-bold text-xs text-blue-600">TripGenie 行李助手</span>
                 </div>
 
                 <div id="appChat" class="flex-1 p-3 overflow-y-auto space-y-3">
                     <div class="bg-gray-100 p-2.5 rounded-xl rounded-bl-none text-[11px] text-gray-700">
-                        Hello! To recommend the most suitable vehicle, please provide your luggage details.
+                        您好！为了给您推荐最合适的车型，请提供您的行李详细信息。
                     </div>
                     <div class="bg-blue-600 p-2.5 rounded-xl rounded-br-none text-[11px] text-white ml-auto max-w-[80%] shadow-sm">
-                        I have 4 suitcases and a snowboard. What kind of car can I take?
+                        我有4件行李箱和一块滑雪板，什么车能坐得下？
                     </div>
                 </div>
 
-                <!-- Step 2: Interactive Luggage Selector Component -->
+                <!-- 步骤 2：交互式行李选择组件 -->
                 <div id="followUpArea" class="px-4 py-3 border-t bg-blue-50/30 hidden">
                     <div class="flex items-center gap-1.5 mb-2">
                         <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-width="2"/></svg>
-                        <p class="text-[10px] text-blue-900 font-bold uppercase tracking-tight">Select Luggage Sizes & Quantity</p>
+                        <p class="text-[10px] text-blue-900 font-bold uppercase tracking-tight">请选择行李尺寸与数量</p>
                     </div>
                     
                     <div class="luggage-card shadow-sm border-blue-100">
                         <div class="luggage-item">
                             <div>
-                                <div class="text-[11px] font-bold">Carry-on (20'')</div>
-                                <div class="text-[9px] text-gray-400">Backpacks / Small bags</div>
+                                <div class="text-[11px] font-bold">手提行李 (20寸)</div>
+                                <div class="text-[9px] text-gray-400">背包 / 手提袋</div>
                             </div>
                             <div class="counter-group">
                                 <button onclick="updateCount('c20', -1)" class="counter-btn disabled" id="btn-c20-minus">-</button>
@@ -118,8 +118,8 @@
                         </div>
                         <div class="luggage-item">
                             <div>
-                                <div class="text-[11px] font-bold">Medium (24'')</div>
-                                <div class="text-[9px] text-gray-400">Standard checked bag</div>
+                                <div class="text-[11px] font-bold">中型托运 (24寸)</div>
+                                <div class="text-[9px] text-gray-400">标准托运行李</div>
                             </div>
                             <div class="counter-group">
                                 <button onclick="updateCount('c24', -1)" class="counter-btn disabled" id="btn-c24-minus">-</button>
@@ -129,8 +129,8 @@
                         </div>
                         <div class="luggage-item border-none">
                             <div>
-                                <div class="text-[11px] font-bold">Large (28'')</div>
-                                <div class="text-[9px] text-gray-400">Extra large checked bag</div>
+                                <div class="text-[11px] font-bold">大型托运 (28寸)</div>
+                                <div class="text-[9px] text-gray-400">超大托运行李</div>
                             </div>
                             <div class="counter-group">
                                 <button onclick="updateCount('c28', -1)" class="counter-btn disabled" id="btn-c28-minus">-</button>
@@ -140,14 +140,14 @@
                         </div>
                         
                         <button id="confirmLuggage" onclick="submitLuggage()" class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg font-bold text-[10px] shadow-sm active:bg-blue-700 transition-colors">
-                            Confirm & Find Matches
+                            确认并匹配车型
                         </button>
                     </div>
                 </div>
 
                 <div class="p-3 border-t">
                     <button id="findBtn" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all">
-                        Find matching ride
+                        寻找匹配车型
                     </button>
                 </div>
             </div>
@@ -157,10 +157,10 @@
         </div>
     </div>
 
-    <!-- RIGHT: Dify Backend -->
+    <!-- 右侧：Dify 后端演示 -->
     <div class="flex-1 flex flex-col gap-4 overflow-hidden">
         
-        <!-- Terminal (Log) -->
+        <!-- 终端日志 (Terminal) -->
         <div class="h-[40%] bg-slate-900 rounded-2xl border border-slate-800 flex flex-col overflow-hidden shadow-2xl">
             <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
                 <div class="flex gap-1.5">
@@ -168,57 +168,57 @@
                     <div class="w-2.5 h-2.5 bg-amber-500 rounded-full"></div>
                     <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
                 </div>
-                <span class="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Dify Execution Engine v2.5</span>
+                <span class="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Dify 执行引擎 v2.5</span>
             </div>
             <div id="terminal" class="flex-1 p-4 font-mono text-[10.5px] text-emerald-400 overflow-y-auto terminal-scroll leading-relaxed">
-                <span class="text-slate-500">// Waiting for user trigger...</span>
+                <span class="text-slate-500">// 等待触发运行...</span>
             </div>
         </div>
 
-        <!-- Architecture Flow -->
+        <!-- 架构流转图 -->
         <div class="flex-1 bg-white rounded-2xl border border-slate-200 p-5 overflow-y-auto shadow-sm flex flex-col gap-4 font-sans">
             
             <div class="grid grid-cols-2 gap-4">
                 <div id="step-1" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
                     <div class="flex items-center gap-2 mb-2 text-blue-600 font-bold text-[11px]">
                         <span class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center text-[9px]">1</span>
-                        Step 1: Slot Filling
+                        步骤 1: 槽位填充 (Slot Filling)
                     </div>
                     <div class="space-y-1 text-[9px] text-slate-500">
-                        <div id="slot-city" class="flex justify-between"><span>Destination:</span> <span class="text-slate-800 font-medium">-</span></div>
-                        <div id="slot-pax" class="flex justify-between"><span>Passengers:</span> <span class="text-slate-800 font-medium">-</span></div>
-                        <div id="slot-luggage" class="flex justify-between"><span>Luggage:</span> <span class="text-slate-800 font-medium">-</span></div>
-                        <div id="slot-special" class="flex justify-between"><span>Special Items:</span> <span class="text-slate-800 font-medium">-</span></div>
+                        <div id="slot-city" class="flex justify-between"><span>目的地:</span> <span class="text-slate-800 font-medium">-</span></div>
+                        <div id="slot-pax" class="flex justify-between"><span>乘车人数:</span> <span class="text-slate-800 font-medium">-</span></div>
+                        <div id="slot-luggage" class="flex justify-between"><span>行李情况:</span> <span class="text-slate-800 font-medium">-</span></div>
+                        <div id="slot-special" class="flex justify-between"><span>特殊行李:</span> <span class="text-slate-800 font-medium">-</span></div>
                     </div>
                 </div>
                 <div id="step-2" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
                     <div class="flex items-center gap-2 mb-2 text-amber-600 font-bold text-[11px]">
                         <span class="w-4 h-4 bg-amber-100 rounded-full flex items-center justify-center text-[9px]">2</span>
-                        Step 2: Dynamic Component
+                        步骤 2: 动态组件下发
                     </div>
                     <div class="text-[9px] text-slate-400 italic">
-                        Strategy: Display LuggageSelector based on intent
+                        策略：根据意图缺失值下发 LuggageSelector
                     </div>
-                    <div id="follow-status" class="mt-2 text-[9px] text-amber-700 font-bold hidden">● Deploying LuggageSelector Component</div>
+                    <div id="follow-status" class="mt-2 text-[9px] text-amber-700 font-bold hidden">● 正在下发交互式行李选择组件</div>
                 </div>
             </div>
 
             <div id="step-3" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
                 <div class="flex items-center gap-2 mb-2 text-emerald-600 font-bold text-[11px]">
                     <span class="w-4 h-4 bg-emerald-100 rounded-full flex items-center justify-center text-[9px]">3</span>
-                    Step 3: Knowledge RAG
+                    步骤 3: 知识库 RAG 检索
                 </div>
                 <div class="flex gap-2">
-                    <div id="rag-gen" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center">General Rules</div>
-                    <div id="rag-map" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center">City Fleet Map</div>
-                    <div id="rag-spec" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center font-bold text-emerald-600 shadow-sm border-emerald-100 bg-emerald-50/20">Special Item Protocol</div>
+                    <div id="rag-gen" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center">行李存放通用准则</div>
+                    <div id="rag-map" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center">城市车队库 (上海)</div>
+                    <div id="rag-spec" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center font-bold text-emerald-600 shadow-sm border-emerald-100 bg-emerald-50/20">特殊行李处理协议</div>
                 </div>
             </div>
 
             <div id="step-4" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
                 <div class="flex items-center gap-2 mb-2 text-indigo-600 font-bold text-[11px]">
                     <span class="w-4 h-4 bg-indigo-100 rounded-full flex items-center justify-center text-[9px]">4</span>
-                    Step 4: Logic Engine
+                    步骤 4: 逻辑判断引擎
                 </div>
                 <div class="flex justify-around items-center px-4">
                     <span id="label-fit" class="px-2 py-1 rounded border text-[9px] text-slate-400 font-mono">fit</span>
@@ -231,10 +231,10 @@
             <div id="step-5" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
                 <div class="flex items-center gap-2 mb-2 text-purple-600 font-bold text-[11px]">
                     <span class="w-4 h-4 bg-purple-100 rounded-full flex items-center justify-center text-[9px]">5</span>
-                    Step 5: Recommendation Output
+                    步骤 5: 最终方案推荐
                 </div>
                 <div id="final-out" class="bg-white p-2 border border-purple-100 rounded text-[9px] text-slate-500 italic">
-                    Synthesizing optimal fleet solution...
+                    正在合成最优用车方案...
                 </div>
             </div>
 
@@ -282,12 +282,12 @@
         div.className = 'mb-1.5';
         const ts = new Date().toLocaleTimeString([], { hour12: false, fractionalSecondDigits: 1 });
         let color = 'text-emerald-400';
-        let prefix = 'LOG';
+        let prefix = '日志';
         
-        if(type === 'step') { color = 'text-white font-bold'; prefix = 'STEP'; }
-        if(type === 'thought') { color = 'text-purple-300'; prefix = 'AI'; }
-        if(type === 'act') { color = 'text-amber-300'; prefix = 'ACTION'; }
-        if(type === 'res') { color = 'text-blue-300'; prefix = 'RESULT'; }
+        if(type === 'step') { color = 'text-white font-bold'; prefix = '步骤'; }
+        if(type === 'thought') { color = 'text-purple-300'; prefix = '思考'; }
+        if(type === 'act') { color = 'text-amber-300'; prefix = '行动'; }
+        if(type === 'res') { color = 'text-blue-300'; prefix = '结果'; }
 
         div.innerHTML = `<span class="text-slate-600">[${ts}]</span> <span class="bg-slate-800 px-1.5 py-0.5 rounded text-[9px] mr-2 text-slate-400 font-sans tracking-tighter">${prefix}</span> <span class="${color}">${text}</span>`;
         terminal.appendChild(div);
@@ -308,97 +308,98 @@
 
     async function startExecution() {
         findBtn.disabled = true;
-        findBtn.innerText = "Analyzing Intent...";
+        findBtn.innerText = "正在分析意图...";
         terminal.innerHTML = '';
         
-        log("Received input: [4 Suitcases + Snowboard]", "step");
+        log("接收到输入：[4个行李箱 + 滑雪板]", "step");
         nodes.s1.classList.add('active-node');
-        log("Step 1: Parsing user intent and extraction slots", "thought");
+        log("步骤 1：解析用户意图并提取槽位信息", "thought");
         await sleep(1000);
-        nodes.slotLuggage.innerText = "4 Units (Sizes Unknown)";
-        nodes.slotSpecial.innerText = "Snowboard x1";
-        nodes.slotCity.innerText = "Shanghai Hongqiao";
-        nodes.slotPax.innerText = "3 Persons";
-        log("Slots Filled: {Destination: Shanghai Hongqiao, Pax: 3, Snowboard: 1}", "res");
+        nodes.slotLuggage.innerText = "4件 (尺寸待确认)";
+        nodes.slotSpecial.innerText = "滑雪板 x1";
+        nodes.slotCity.innerText = "上海虹桥T2航站楼";
+        nodes.slotPax.innerText = "3人 (含1儿童)";
+        log("槽位已填充: {目的地: 上海虹桥T2, 人数: 3, 滑雪板: 1}", "res");
         await sleep(600);
         nodes.s1.classList.remove('active-node');
 
         nodes.s2.classList.add('active-node');
-        log("Step 2: Triggering dynamic component logic", "thought");
+        log("步骤 2：触发动态组件下发逻辑", "thought");
         nodes.followStatus.classList.remove('hidden');
         await sleep(1000);
-        log("Action: Deploying LuggageSelector component to user", "act");
-        addAppMsg("I've received your request. To recommend the perfect car (considering the length of your snowboard), please specify the size of your suitcases:");
+        log("行动：向用户下发 LuggageSelector 行李选择组件", "act");
+        addAppMsg("我已经收到您的请求。为了给您推荐最合适的车型（考虑到滑雪板的长度），请具体勾选您的行李箱尺寸：");
         followUpArea.classList.remove('hidden');
         
-        findBtn.innerText = "Please select in component";
+        findBtn.innerText = "请在交互组件中选择";
     }
 
     async function submitLuggage() {
         const total = lugCounts.c20 + lugCounts.c24 + lugCounts.c28;
         if(total === 0) {
-            alert("Please select at least one suitcase");
+            alert("请至少选择一件行李箱");
             return;
         }
         
         followUpArea.classList.add('hidden');
-        const summary = `${lugCounts.c20}x20'', ${lugCounts.c24}x24'', ${lugCounts.c28}x28''`;
-        addAppMsg(`My luggage: ${summary}`, true);
+        const summary = `${lugCounts.c20}个20寸, ${lugCounts.c24}个24寸, ${lugCounts.c28}个28寸`;
+        addAppMsg(`我的行李箱：${summary}`, true);
         
-        findBtn.innerText = "Continuing analysis...";
-        log(`User feedback: ${summary}`, "res");
-        nodes.followStatus.innerText = "● Response Received";
+        findBtn.innerText = "继续分析中...";
+        log(`用户反馈反馈：${summary}`, "res");
+        nodes.followStatus.innerText = "● 已接收用户反馈";
         nodes.slotLuggage.innerText = summary;
         await sleep(800);
         nodes.s2.classList.remove('active-node');
 
-        // --- STEP 3: Knowledge RAG ---
+        // --- 步骤 3: 知识库 RAG ---
         nodes.s3.classList.add('active-node');
-        log("Step 3: Querying RAG Knowledge Base", "step");
-        log("Query: [Snowboard length storage] [Shanghai fleet capacity]", "act");
+        log("步骤 3：检索知识库 (RAG)", "step");
+        log("查询：[滑雪板存放长度] [上海车队车型容量]", "act");
         await sleep(1200);
-        log("Knowledge: Snowboards (>1.6m) require MPV with rear seats partially folded. Shanghai Hongqiao pick-up allows standard vans.", "res");
+        log("检索结果：滑雪板(>1.6m)需MPV车型且后排需折叠。上海虹桥接机允许标准MPV进入。", "res");
         await sleep(500);
         nodes.s3.classList.remove('active-node');
 
-        // --- STEP 4: Logic Engine ---
+        // --- 步骤 4: 逻辑引擎 ---
         nodes.s4.classList.add('active-node');
-        log("Step 4: Executing capacity and safety logic", "thought");
+        log("步骤 4：执行容量与安全判断逻辑", "thought");
         await sleep(1200);
         
         if(lugCounts.c28 >= 2 || total > 4) {
-            log("Evaluation: SEDAN/SUV insufficient for 3 pax + board + large bags.", "res");
+            log("评估：轿车/普通SUV无法容纳 3人 + 雪板 + 多件大行李。", "res");
             nodes.labelNot.classList.add('bg-red-100', 'text-red-700', 'border-red-300');
-            nodes.labelNot.innerText = "not_fit (Standard)";
+            nodes.labelNot.innerText = "不匹配 (轿车/SUV)";
         } else {
-            log("Evaluation: Moderate risk. High occupancy.", "res");
+            log("评估：风险程度中等。满载预警。", "res");
             nodes.labelRisky.classList.add('bg-amber-100', 'text-amber-700', 'border-amber-300');
+            nodes.labelRisky.innerText = "风险匹配";
         }
         await sleep(600);
         nodes.s4.classList.remove('active-node');
 
-        // --- STEP 5: Output ---
+        // --- 步骤 5: 输出 ---
         nodes.s5.classList.add('active-node');
-        log("Step 5: Generating structured response", "step");
+        log("步骤 5：生成结构化推荐方案", "step");
         await sleep(1000);
         
-        const finalMsg = `【Match Found】Recommended: Luxury 6-Seater MPV (Business Van).
-Reason: A standard sedan or SUV cannot accommodate 3 passengers, 4 suitcases, AND a long snowboard simultaneously. An MPV allows partial folding of the 3rd-row seats to secure your snowboard safely.
-💡 Pro-tip: Ensure your snowboard is in a protective bag to prevent scratches during transport.`;
+        const finalMsg = `【匹配成功】推荐车型：商务 6 座 MPV。
+推荐理由：普通的五座轿车或 SUV 无法在坐下 3 名乘客的同时，放下 4 件行李箱和 1 块长滑雪板。MPV 车型可以通过折叠第三排部分座椅，安全稳固地存放您的滑雪板，且不影响儿童乘坐。
+💡 温馨提示：请确保滑雪板有防护包，以免运输过程中划伤车漆或行李。`;
         
         nodes.finalOut.innerText = finalMsg;
         nodes.finalOut.classList.remove('italic');
         addAppMsg(finalMsg);
-        log("Task complete.", "info");
+        log("演示任务完成。", "info");
         
         nodes.s5.classList.remove('active-node');
         findBtn.disabled = false;
-        findBtn.innerText = "Restart Simulation";
+        findBtn.innerText = "重新开始模拟";
         findBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
     }
 
     findBtn.addEventListener('click', () => {
-        if(findBtn.innerText.includes("Restart")) {
+        if(findBtn.innerText.includes("重新")) {
             location.reload();
         } else {
             startExecution();
