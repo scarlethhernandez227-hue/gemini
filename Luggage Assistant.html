@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TripGenie x Dify 5步联动逻辑演示</title>
+    <title>TripGenie x Dify 5-Step Logic Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes pulse-glow {
@@ -22,218 +22,190 @@
 
         .luggage-card {
             background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            border: 1px solid #e0e7ff;
+            border-radius: 16px;
             padding: 12px;
             margin-top: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         .luggage-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f3f4f6;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f4ff;
         }
         .luggage-item:last-child { border-bottom: none; }
         .counter-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         .counter-btn {
-            width: 24px;
-            height: 24px;
-            border: 1px solid #3b82f6;
+            width: 28px;
+            height: 28px;
+            border: 1.5px solid #3b82f6;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #3b82f6;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
+            background: white;
         }
         .counter-btn:active { background: #eff6ff; transform: scale(0.9); }
         .counter-btn.disabled { border-color: #d1d5db; color: #d1d5db; cursor: not-allowed; }
+        
+        /* 聊天气泡动画 */
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="bg-slate-50 font-sans h-screen flex items-center justify-center overflow-hidden text-slate-900">
 
-<div class="w-full h-full max-w-[1440px] flex gap-4 p-4">
+<div class="w-full h-full max-w-[1440px] flex gap-6 p-6">
     
-    <!-- 左侧：App 界面 (手机模拟) -->
-    <div class="w-[380px] bg-white rounded-[3rem] border-[10px] border-gray-900 shadow-2xl relative flex flex-col overflow-hidden shrink-0">
-        <div class="h-10 flex justify-between px-8 pt-4 items-center">
+    <!-- Left: App Interface (Mobile Simulation) - English UI -->
+    <div class="w-[400px] bg-white rounded-[3.5rem] border-[12px] border-gray-900 shadow-2xl relative flex flex-col overflow-hidden shrink-0">
+        <div class="h-10 flex justify-between px-10 pt-5 items-center">
             <span class="text-xs font-bold font-mono">9:41</span>
-            <div class="w-20 h-5 bg-black rounded-full"></div>
-            <div class="flex gap-1 text-[10px] font-mono">100%</div>
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+            <div class="flex gap-1 text-[10px] font-mono">LTE</div>
         </div>
 
-        <div class="flex-1 flex flex-col px-4 py-2">
-            <div class="flex items-center mb-4">
-                <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5"/></svg>
+        <div class="flex-1 flex flex-col px-5 py-4">
+            <!-- Header Info -->
+            <div class="flex items-center mb-5">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5"/></svg>
                 </div>
-                <div class="ml-2">
-                    <h2 class="text-xs font-bold">送机：上海虹桥T2航站楼</h2>
-                    <p class="text-[9px] text-gray-400">3月20日 15:00 · 3人(含1儿童) · 含特殊行李</p>
+                <div class="ml-3">
+                    <h2 class="text-sm font-extrabold tracking-tight">To: Hongqiao T2</h2>
+                    <p class="text-[10px] text-gray-400 font-medium">Mar 20, 15:00 · 3 Pax (1 Child) · Special Items</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col">
-                <div class="p-3 border-b flex items-center gap-2">
-                    <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+            <!-- Chat Container -->
+            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 flex-1 flex flex-col overflow-hidden">
+                <!-- App Bar -->
+                <div class="p-4 border-b flex items-center gap-3 bg-slate-50/50">
+                    <div class="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
                     </div>
-                    <span class="font-bold text-xs text-blue-600">TripGenie 行李助手</span>
-                </div>
-
-                <div id="appChat" class="flex-1 p-3 overflow-y-auto space-y-3">
-                    <div class="bg-gray-100 p-2.5 rounded-xl rounded-bl-none text-[11px] text-gray-700">
-                        您好！为了给您推荐最合适的车型，请提供您的行李详细信息。
-                    </div>
-                    <div class="bg-blue-600 p-2.5 rounded-xl rounded-br-none text-[11px] text-white ml-auto max-w-[80%] shadow-sm">
-                        我有4件行李箱和一块滑雪板，什么车能坐得下？
+                    <div>
+                        <span class="font-bold text-xs text-blue-700 block">TripGenie Assistant</span>
+                        <span class="text-[9px] text-emerald-500 flex items-center gap-1">● Online</span>
                     </div>
                 </div>
 
-                <!-- 步骤 2：交互式行李选择组件 -->
-                <div id="followUpArea" class="px-4 py-3 border-t bg-blue-50/30 hidden">
-                    <div class="flex items-center gap-1.5 mb-2">
-                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-width="2"/></svg>
-                        <p class="text-[10px] text-blue-900 font-bold uppercase tracking-tight">请选择行李尺寸与数量</p>
+                <!-- Message Area -->
+                <div id="appChat" class="flex-1 p-4 overflow-y-auto space-y-4 no-scrollbar bg-white">
+                    <div class="bg-gray-100 p-3 rounded-2xl rounded-bl-none text-[12px] text-gray-700 leading-relaxed fade-in">
+                        Hello! To recommend the best vehicle, please provide your luggage details.
                     </div>
-                    
-                    <div class="luggage-card shadow-sm border-blue-100">
-                        <div class="luggage-item">
-                            <div>
-                                <div class="text-[11px] font-bold">手提行李 (20寸)</div>
-                                <div class="text-[9px] text-gray-400">背包 / 手提袋</div>
-                            </div>
-                            <div class="counter-group">
-                                <button onclick="updateCount('c20', -1)" class="counter-btn disabled" id="btn-c20-minus">-</button>
-                                <span class="text-xs font-mono w-4 text-center" id="count-c20">0</span>
-                                <button onclick="updateCount('c20', 1)" class="counter-btn">+</button>
-                            </div>
-                        </div>
-                        <div class="luggage-item">
-                            <div>
-                                <div class="text-[11px] font-bold">中型托运 (24寸)</div>
-                                <div class="text-[9px] text-gray-400">标准托运行李</div>
-                            </div>
-                            <div class="counter-group">
-                                <button onclick="updateCount('c24', -1)" class="counter-btn disabled" id="btn-c24-minus">-</button>
-                                <span class="text-xs font-mono w-4 text-center" id="count-c24">0</span>
-                                <button onclick="updateCount('c24', 1)" class="counter-btn">+</button>
-                            </div>
-                        </div>
-                        <div class="luggage-item border-none">
-                            <div>
-                                <div class="text-[11px] font-bold">大型托运 (28寸)</div>
-                                <div class="text-[9px] text-gray-400">超大托运行李</div>
-                            </div>
-                            <div class="counter-group">
-                                <button onclick="updateCount('c28', -1)" class="counter-btn disabled" id="btn-c28-minus">-</button>
-                                <span class="text-xs font-mono w-4 text-center" id="count-c28">0</span>
-                                <button onclick="updateCount('c28', 1)" class="counter-btn">+</button>
-                            </div>
-                        </div>
-                        
-                        <button id="confirmLuggage" onclick="submitLuggage()" class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg font-bold text-[10px] shadow-sm active:bg-blue-700 transition-colors">
-                            确认并匹配车型
-                        </button>
+                    <div class="bg-blue-600 p-3 rounded-2xl rounded-br-none text-[12px] text-white ml-auto max-w-[85%] shadow-md fade-in">
+                        I have 4 suitcases and a snowboard. What car fits?
                     </div>
+                    <!-- Dynamic Component will be inserted here -->
                 </div>
 
-                <div class="p-3 border-t">
-                    <button id="findBtn" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all">
-                        寻找匹配车型
+                <!-- Bottom Button -->
+                <div class="p-4 border-t bg-white">
+                    <button id="findBtn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-sm shadow-xl shadow-blue-100 active:scale-95 transition-all">
+                        Find Matching Vehicle
                     </button>
                 </div>
             </div>
         </div>
-        <div class="h-6 flex justify-center items-center pb-2">
-            <div class="w-24 h-1 bg-gray-200 rounded-full"></div>
+        <div class="h-8 flex justify-center items-center pb-3">
+            <div class="w-28 h-1.5 bg-gray-200 rounded-full"></div>
         </div>
     </div>
 
-    <!-- 右侧：Dify 后端演示 -->
+    <!-- Right: Dify Backend Simulation - Chinese Logic -->
     <div class="flex-1 flex flex-col gap-4 overflow-hidden">
         
-        <!-- 终端日志 (Terminal) -->
-        <div class="h-[40%] bg-slate-900 rounded-2xl border border-slate-800 flex flex-col overflow-hidden shadow-2xl">
-            <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-                <div class="flex gap-1.5">
-                    <div class="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-                    <div class="w-2.5 h-2.5 bg-amber-500 rounded-full"></div>
-                    <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
+        <!-- Terminal Logs -->
+        <div class="h-[45%] bg-slate-900 rounded-[2rem] border border-slate-800 flex flex-col overflow-hidden shadow-2xl">
+            <div class="bg-slate-800 px-5 py-3 flex items-center justify-between border-b border-slate-700">
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-amber-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
                 </div>
-                <span class="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Dify 执行引擎 v2.5</span>
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Dify Core Engine v2.5</span>
             </div>
-            <div id="terminal" class="flex-1 p-4 font-mono text-[10.5px] text-emerald-400 overflow-y-auto terminal-scroll leading-relaxed">
+            <div id="terminal" class="flex-1 p-5 font-mono text-[11px] text-emerald-400 overflow-y-auto terminal-scroll leading-relaxed">
                 <span class="text-slate-500">// 等待触发运行...</span>
             </div>
         </div>
 
-        <!-- 架构流转图 -->
-        <div class="flex-1 bg-white rounded-2xl border border-slate-200 p-5 overflow-y-auto shadow-sm flex flex-col gap-4 font-sans">
+        <!-- Workflow Diagram -->
+        <div class="flex-1 bg-white rounded-[2rem] border border-slate-200 p-6 overflow-y-auto shadow-sm flex flex-col gap-5 font-sans">
             
             <div class="grid grid-cols-2 gap-4">
-                <div id="step-1" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
-                    <div class="flex items-center gap-2 mb-2 text-blue-600 font-bold text-[11px]">
-                        <span class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center text-[9px]">1</span>
+                <div id="step-1" class="border border-slate-100 bg-slate-50/50 p-4 rounded-2xl transition-all">
+                    <div class="flex items-center gap-2 mb-3 text-blue-600 font-bold text-xs">
+                        <span class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-[10px]">1</span>
                         步骤 1: 槽位填充 (Slot Filling)
                     </div>
-                    <div class="space-y-1 text-[9px] text-slate-500">
+                    <div class="space-y-1.5 text-[10px] text-slate-500">
                         <div id="slot-city" class="flex justify-between"><span>目的地:</span> <span class="text-slate-800 font-medium">-</span></div>
                         <div id="slot-pax" class="flex justify-between"><span>乘车人数:</span> <span class="text-slate-800 font-medium">-</span></div>
                         <div id="slot-luggage" class="flex justify-between"><span>行李情况:</span> <span class="text-slate-800 font-medium">-</span></div>
                         <div id="slot-special" class="flex justify-between"><span>特殊行李:</span> <span class="text-slate-800 font-medium">-</span></div>
                     </div>
                 </div>
-                <div id="step-2" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
-                    <div class="flex items-center gap-2 mb-2 text-amber-600 font-bold text-[11px]">
-                        <span class="w-4 h-4 bg-amber-100 rounded-full flex items-center justify-center text-[9px]">2</span>
+                <div id="step-2" class="border border-slate-100 bg-slate-50/50 p-4 rounded-2xl transition-all">
+                    <div class="flex items-center gap-2 mb-3 text-amber-600 font-bold text-xs">
+                        <span class="w-5 h-5 bg-amber-100 rounded-full flex items-center justify-center text-[10px]">2</span>
                         步骤 2: 动态组件下发
                     </div>
-                    <div class="text-[9px] text-slate-400 italic">
-                        策略：根据意图缺失值下发 LuggageSelector
+                    <div class="text-[10px] text-slate-400 italic mb-2">
+                        策略：意图缺失 -> 下发组件
                     </div>
-                    <div id="follow-status" class="mt-2 text-[9px] text-amber-700 font-bold hidden">● 正在下发交互式行李选择组件</div>
+                    <div id="follow-status" class="text-[10px] text-amber-700 font-bold hidden flex items-center gap-1">
+                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span></span>
+                        正在下发 LuggageSelector
+                    </div>
                 </div>
             </div>
 
-            <div id="step-3" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
-                <div class="flex items-center gap-2 mb-2 text-emerald-600 font-bold text-[11px]">
-                    <span class="w-4 h-4 bg-emerald-100 rounded-full flex items-center justify-center text-[9px]">3</span>
+            <div id="step-3" class="border border-slate-100 bg-slate-50/50 p-4 rounded-2xl transition-all">
+                <div class="flex items-center gap-2 mb-3 text-emerald-600 font-bold text-xs">
+                    <span class="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center text-[10px]">3</span>
                     步骤 3: 知识库 RAG 检索
                 </div>
-                <div class="flex gap-2">
-                    <div id="rag-gen" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center">行李存放通用准则</div>
-                    <div id="rag-map" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center">城市车队库 (上海)</div>
-                    <div id="rag-spec" class="flex-1 bg-white p-2 rounded border border-slate-100 text-[9px] text-center font-bold text-emerald-600 shadow-sm border-emerald-100 bg-emerald-50/20">特殊行李处理协议</div>
+                <div class="flex gap-3">
+                    <div class="flex-1 bg-white p-2.5 rounded-xl border border-slate-100 text-[10px] text-center shadow-sm">通用准则</div>
+                    <div class="flex-1 bg-white p-2.5 rounded-xl border border-slate-100 text-[10px] text-center shadow-sm">车队库 (上海)</div>
+                    <div id="rag-spec" class="flex-1 bg-white p-2.5 rounded-xl border border-emerald-100 text-[10px] text-center font-bold text-emerald-600 bg-emerald-50/20 shadow-sm">特殊行李协议</div>
                 </div>
             </div>
 
-            <div id="step-4" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
-                <div class="flex items-center gap-2 mb-2 text-indigo-600 font-bold text-[11px]">
-                    <span class="w-4 h-4 bg-indigo-100 rounded-full flex items-center justify-center text-[9px]">4</span>
-                    步骤 4: 逻辑判断引擎
+            <div id="step-4" class="border border-slate-100 bg-slate-50/50 p-4 rounded-2xl transition-all">
+                <div class="flex items-center gap-2 mb-3 text-indigo-600 font-bold text-xs">
+                    <span class="w-5 h-5 bg-indigo-100 rounded-full flex items-center justify-center text-[10px]">4</span>
+                    步骤 4: 逻辑判断引擎 (Logic)
                 </div>
-                <div class="flex justify-around items-center px-4">
-                    <span id="label-fit" class="px-2 py-1 rounded border text-[9px] text-slate-400 font-mono">fit</span>
-                    <span id="label-risky" class="px-2 py-1 rounded border text-[9px] text-slate-400 font-mono">risky_fit</span>
-                    <span id="label-not" class="px-2 py-1 rounded border text-[9px] text-slate-400 font-mono">not_fit</span>
-                    <span id="label-unknown" class="px-2 py-1 rounded border text-[9px] text-slate-400 font-mono">unknown</span>
+                <div class="flex justify-around items-center px-6">
+                    <span id="label-fit" class="px-3 py-1.5 rounded-lg border text-[10px] text-slate-400 font-mono transition-colors">fit</span>
+                    <span id="label-risky" class="px-3 py-1.5 rounded-lg border text-[10px] text-slate-400 font-mono transition-colors">risky_fit</span>
+                    <span id="label-not" class="px-3 py-1.5 rounded-lg border text-[10px] text-slate-400 font-mono transition-colors">not_fit</span>
                 </div>
             </div>
 
-            <div id="step-5" class="border border-slate-100 bg-slate-50/50 p-3 rounded-xl transition-all">
-                <div class="flex items-center gap-2 mb-2 text-purple-600 font-bold text-[11px]">
-                    <span class="w-4 h-4 bg-purple-100 rounded-full flex items-center justify-center text-[9px]">5</span>
+            <div id="step-5" class="border border-slate-100 bg-slate-50/50 p-4 rounded-2xl transition-all">
+                <div class="flex items-center gap-2 mb-3 text-purple-600 font-bold text-xs">
+                    <span class="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center text-[10px]">5</span>
                     步骤 5: 最终方案推荐
                 </div>
-                <div id="final-out" class="bg-white p-2 border border-purple-100 rounded text-[9px] text-slate-500 italic">
+                <div id="final-out" class="bg-white p-3 border border-purple-100 rounded-xl text-[10px] text-slate-500 italic shadow-sm leading-relaxed">
                     正在合成最优用车方案...
                 </div>
             </div>
@@ -242,11 +214,61 @@
     </div>
 </div>
 
+<!-- Template for the Luggage Selector (to be injected into chat) -->
+<template id="luggageTemplate">
+    <div class="space-y-2 fade-in">
+        <div class="bg-gray-100 p-3 rounded-2xl rounded-bl-none text-[12px] text-gray-700 leading-relaxed">
+            I've received your request. To find the best fit (considering the snowboard), please select your suitcase sizes:
+        </div>
+        <div class="luggage-card">
+            <div class="flex items-center gap-2 mb-3">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-width="2"/></svg>
+                <span class="text-[10px] font-bold text-blue-900 uppercase">Luggage Selector</span>
+            </div>
+            <div class="luggage-item">
+                <div>
+                    <div class="text-[11px] font-bold">Carry-on (20")</div>
+                    <div class="text-[9px] text-gray-400">Backpacks / Small bags</div>
+                </div>
+                <div class="counter-group">
+                    <button onclick="updateCount('c20', -1)" class="counter-btn disabled" id="btn-c20-minus">-</button>
+                    <span class="text-xs font-mono w-4 text-center" id="count-c20">0</span>
+                    <button onclick="updateCount('c20', 1)" class="counter-btn">+</button>
+                </div>
+            </div>
+            <div class="luggage-item">
+                <div>
+                    <div class="text-[11px] font-bold">Check-in (24")</div>
+                    <div class="text-[9px] text-gray-400">Standard suitcase</div>
+                </div>
+                <div class="counter-group">
+                    <button onclick="updateCount('c24', -1)" class="counter-btn disabled" id="btn-c24-minus">-</button>
+                    <span class="text-xs font-mono w-4 text-center" id="count-c24">0</span>
+                    <button onclick="updateCount('c24', 1)" class="counter-btn">+</button>
+                </div>
+            </div>
+            <div class="luggage-item border-none">
+                <div>
+                    <div class="text-[11px] font-bold">Large (28")</div>
+                    <div class="text-[9px] text-gray-400">Extra large suitcase</div>
+                </div>
+                <div class="counter-group">
+                    <button onclick="updateCount('c28', -1)" class="counter-btn disabled" id="btn-c28-minus">-</button>
+                    <span class="text-xs font-mono w-4 text-center" id="count-c28">0</span>
+                    <button onclick="updateCount('c28', 1)" class="counter-btn">+</button>
+                </div>
+            </div>
+            <button id="confirmLuggage" onclick="submitLuggage()" class="w-full mt-4 bg-blue-600 text-white py-3 rounded-xl font-bold text-xs shadow-lg active:bg-blue-700 transition-colors">
+                Confirm & Match Vehicle
+            </button>
+        </div>
+    </div>
+</template>
+
 <script>
     const findBtn = document.getElementById('findBtn');
     const terminal = document.getElementById('terminal');
     const appChat = document.getElementById('appChat');
-    const followUpArea = document.getElementById('followUpArea');
 
     const nodes = {
         s1: document.getElementById('step-1'),
@@ -297,8 +319,8 @@
     function addAppMsg(text, isUser = false) {
         const div = document.createElement('div');
         div.className = isUser ? 
-            "bg-blue-600 p-2.5 rounded-xl rounded-br-none text-[11px] text-white ml-auto max-w-[80%]" : 
-            "bg-gray-100 p-2.5 rounded-xl rounded-bl-none text-[11px] text-gray-700";
+            "bg-blue-600 p-3 rounded-2xl rounded-br-none text-[12px] text-white ml-auto max-w-[85%] shadow-sm fade-in" : 
+            "bg-gray-100 p-3 rounded-2xl rounded-bl-none text-[12px] text-gray-700 fade-in";
         div.innerText = text;
         appChat.appendChild(div);
         appChat.scrollTop = appChat.scrollHeight;
@@ -308,7 +330,7 @@
 
     async function startExecution() {
         findBtn.disabled = true;
-        findBtn.innerText = "正在分析意图...";
+        findBtn.innerText = "Analyzing Intent...";
         terminal.innerHTML = '';
         
         log("接收到输入：[4个行李箱 + 滑雪板]", "step");
@@ -328,64 +350,73 @@
         nodes.followStatus.classList.remove('hidden');
         await sleep(1000);
         log("行动：向用户下发 LuggageSelector 行李选择组件", "act");
-        addAppMsg("我已经收到您的请求。为了给您推荐最合适的车型（考虑到滑雪板的长度），请具体勾选您的行李箱尺寸：");
-        followUpArea.classList.remove('hidden');
         
-        findBtn.innerText = "请在交互组件中选择";
+        // Inject Luggage Selector as a message
+        const temp = document.getElementById('luggageTemplate');
+        const clone = temp.content.cloneNode(true);
+        appChat.appendChild(clone);
+        appChat.scrollTop = appChat.scrollHeight;
+        
+        findBtn.innerText = "Waiting for Input...";
     }
 
     async function submitLuggage() {
         const total = lugCounts.c20 + lugCounts.c24 + lugCounts.c28;
         if(total === 0) {
-            alert("请至少选择一件行李箱");
+            alert("Please select at least one suitcase.");
             return;
         }
         
-        followUpArea.classList.add('hidden');
-        const summary = `${lugCounts.c20}个20寸, ${lugCounts.c24}个24寸, ${lugCounts.c28}个28寸`;
-        addAppMsg(`我的行李箱：${summary}`, true);
+        // Remove the selector from the chat to simulate submission
+        const card = document.querySelector('.luggage-card');
+        card.parentElement.innerHTML = `<div class="bg-gray-100 p-3 rounded-2xl rounded-bl-none text-[12px] text-gray-700 italic">Luggage details confirmed.</div>`;
         
-        findBtn.innerText = "继续分析中...";
-        log(`用户反馈反馈：${summary}`, "res");
-        nodes.followStatus.innerText = "● 已接收用户反馈";
+        const summary = `${lugCounts.c20}x20", ${lugCounts.c24}x24", ${lugCounts.c28}x28"`;
+        addAppMsg(`My luggage: ${summary}`, true);
+        
+        findBtn.innerText = "Finalizing Analysis...";
+        log(`用户反馈：${summary}`, "res");
+        nodes.followStatus.innerHTML = "● 已接收反馈";
         nodes.slotLuggage.innerText = summary;
         await sleep(800);
         nodes.s2.classList.remove('active-node');
 
-        // --- 步骤 3: 知识库 RAG ---
+        // --- Step 3: RAG ---
         nodes.s3.classList.add('active-node');
         log("步骤 3：检索知识库 (RAG)", "step");
         log("查询：[滑雪板存放长度] [上海车队车型容量]", "act");
         await sleep(1200);
-        log("检索结果：滑雪板(>1.6m)需MPV车型且后排需折叠。上海虹桥接机允许标准MPV进入。", "res");
+        log("检索结果：滑雪板(>1.6m)需MPV车型且后排需折叠。虹桥接机允许标准MPV。", "res");
         await sleep(500);
         nodes.s3.classList.remove('active-node');
 
-        // --- 步骤 4: 逻辑引擎 ---
+        // --- Step 4: Logic ---
         nodes.s4.classList.add('active-node');
         log("步骤 4：执行容量与安全判断逻辑", "thought");
         await sleep(1200);
         
         if(lugCounts.c28 >= 2 || total > 4) {
-            log("评估：轿车/普通SUV无法容纳 3人 + 雪板 + 多件大行李。", "res");
+            log("评估：无法容纳 3人 + 雪板 + 多件大行李。", "res");
             nodes.labelNot.classList.add('bg-red-100', 'text-red-700', 'border-red-300');
-            nodes.labelNot.innerText = "不匹配 (轿车/SUV)";
+            nodes.labelNot.innerText = "not_fit (Sedan)";
         } else {
-            log("评估：风险程度中等。满载预警。", "res");
+            log("评估：风险程度中等。MPV为最优解。", "res");
             nodes.labelRisky.classList.add('bg-amber-100', 'text-amber-700', 'border-amber-300');
-            nodes.labelRisky.innerText = "风险匹配";
+            nodes.labelRisky.innerText = "risky_fit";
         }
         await sleep(600);
         nodes.s4.classList.remove('active-node');
 
-        // --- 步骤 5: 输出 ---
+        // --- Step 5: Final Output ---
         nodes.s5.classList.add('active-node');
-        log("步骤 5：生成结构化推荐方案", "step");
+        log("步骤 5：生成推荐方案", "step");
         await sleep(1000);
         
-        const finalMsg = `【匹配成功】推荐车型：商务 6 座 MPV。
-推荐理由：普通的五座轿车或 SUV 无法在坐下 3 名乘客的同时，放下 4 件行李箱和 1 块长滑雪板。MPV 车型可以通过折叠第三排部分座椅，安全稳固地存放您的滑雪板，且不影响儿童乘坐。
-💡 温馨提示：请确保滑雪板有防护包，以免运输过程中划伤车漆或行李。`;
+        const finalMsg = `【Match Found】Recommended: 6-Seater Business MPV.
+        
+Why: A standard sedan or SUV cannot safely accommodate 3 passengers along with 4 suitcases and a long snowboard. An MPV allows us to fold part of the 3rd row to securely store your snowboard without affecting the child seat safety.
+
+💡 Tip: Please ensure your snowboard is in a protective bag to prevent scratches during transport.`;
         
         nodes.finalOut.innerText = finalMsg;
         nodes.finalOut.classList.remove('italic');
@@ -394,12 +425,12 @@
         
         nodes.s5.classList.remove('active-node');
         findBtn.disabled = false;
-        findBtn.innerText = "重新开始模拟";
+        findBtn.innerText = "Restart Simulation";
         findBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
     }
 
     findBtn.addEventListener('click', () => {
-        if(findBtn.innerText.includes("重新")) {
+        if(findBtn.innerText.includes("Restart")) {
             location.reload();
         } else {
             startExecution();
